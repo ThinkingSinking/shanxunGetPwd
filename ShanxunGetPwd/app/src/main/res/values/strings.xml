@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">自动获取闪讯密码</string>
+    <string name="btn_getPwd">获取!</string>
+    <string name="tip_waitToClick">点击按钮获取闪讯密码</string>
+</resources>
