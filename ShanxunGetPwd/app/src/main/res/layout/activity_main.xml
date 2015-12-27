@@ -1,53 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:useDefaultMargins="true"
     tools:context="com.tools.zjd.shanxungetpwd.MainActivity"
-    android:columnCount="3">
-    <TextView
-        android:layout_columnSpan="3"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:padding="10dp"
-        android:layout_marginTop="100px"
-        android:layout_marginBottom="100px"
-        android:textSize="30dp"
-        android:text="Please press the button to get ShanxunPwd."/>
-    <TextView
-        android:layout_columnSpan="3"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000"/>
+    android:orientation="vertical">
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_columnSpan="3"
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        android:layout_margin="20dp"
         android:background="#f0f0f0">
         <TextView
             android:id="@+id/msg"
-            android:layout_columnSpan="3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="16dp"
             android:text="@string/tip_waitToClick"/>
     </LinearLayout>
-    <TextView
-        android:layout_columnSpan="3"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000"/>
     <Button
         android:id="@+id/submit"
-        android:layout_columnSpan="3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="10dp"
+        android:layout_margin="10dp"
         android:text="@string/btn_getPwd"
         android:textColor="#ffffff"
         android:background="#3f51b5"/>
-</GridLayout>
+</LinearLayout>
