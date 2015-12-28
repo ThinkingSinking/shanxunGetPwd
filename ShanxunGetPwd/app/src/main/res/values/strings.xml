@@ -2,4 +2,5 @@
     <string name="app_name">自动获取闪讯密码</string>
     <string name="btn_getPwd">获取!</string>
     <string name="tip_waitToClick">点击按钮获取闪讯密码。\n（请确保当前运营商为电信）</string>
+    <string name="madeBy">Made By ZJD</string>
 </resources>
