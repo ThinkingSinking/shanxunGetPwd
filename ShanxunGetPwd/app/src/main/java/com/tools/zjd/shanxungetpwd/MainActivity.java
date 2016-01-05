@@ -2,6 +2,7 @@
 package com.tools.zjd.shanxungetpwd;
 
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,12 +23,15 @@ public class MainActivity extends AppCompatActivity {
     private int i=0;
     //0表示初始状态,1表示短信已发送但还没收到回信,2表示短信接收成功
     private int state=0;
+    private static final String PREFERENCE_NAME="SaveShanxunPwd";//sharedPreference名称
+    private static final int MODE=MODE_PRIVATE;//私有模式
+    private String pwd=null;
+    private String deadline=null;
 
     protected void onCreate(Bundle savedInstanceState) {
         try{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
             this.msg=(TextView)findViewById(R.id.msg);//获取信息提示框
             this.submit=(Button)findViewById(R.id.submit);//获取按钮
             this.submit.setOnClickListener(new submit_Listener());//给按钮设置监听事件
@@ -44,7 +47,40 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    //”获取按钮“的鼠标点击监听类
+    protected void onStart() {
+        super.onStart();
+        if (state==0) loadSharedPreferences();
+    }
+    /**
+     * 读取上一次获取的闪讯密码
+     */
+    private void loadSharedPreferences(){
+        SharedPreferences sharedPreferences=getSharedPreferences(PREFERENCE_NAME,MODE);
+        boolean isExist=sharedPreferences.getBoolean("isExist",false);
+        if(isExist){
+            pwd=sharedPreferences.getString("lastPwd","000000");
+            deadline=sharedPreferences.getString("deadLine","1997-00-00 00:00:00");
+            msg.setText("上次获取记录：\n\n闪讯密码："+pwd+"\n\n"+"截止日期："+deadline+"\n");
+            submit.setText("重新获取");
+        }
+    }
+    /**
+     * 保存本次获取的闪讯密码
+     */
+    private void saveSharedPreferences(){
+        SharedPreferences sharedPreferences=getSharedPreferences(PREFERENCE_NAME,MODE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        if (state==2){
+            editor.putString("lastPwd", pwd);
+            editor.putString("deadLine", deadline);
+            editor.putBoolean("isExist", true);
+        }
+        editor.commit();
+
+    }
+    /**
+     *”获取按钮“的鼠标点击监听类
+     */
     class submit_Listener implements OnClickListener {
         public void onClick(View v){
             try {
@@ -73,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    //监听短信数据库变化
+    /**
+     * 监听短信数据库变化
+     */
     class SmsContent extends ContentObserver {
         private Cursor cursor = null;
         public SmsContent(Handler handler) {
@@ -92,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     msg.setText(bodyFormat(body,address));
                     submit.setText("获取成功 !");
                     state=2;
+                    saveSharedPreferences();
                     resolver.delete(Uri.parse("content://sms"), "date=" + date, null);
                     resolver.unregisterContentObserver(this);
                 }
@@ -100,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
         }
         public String bodyFormat(String body,String phone){
             String msg = "";
-            String pwd = "";
-            String deadline = "";
             if(body.length()!=51){
                 state = 0;//接收短信失败
                 return "获取失败，请重新尝试!";
@@ -116,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
             return msg;
         }
     }
-
 
 }
 
